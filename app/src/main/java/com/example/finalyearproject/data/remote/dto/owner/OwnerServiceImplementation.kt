@@ -14,11 +14,11 @@ class OwnerServiceImplementation(
             client.post<SignUpResponse> {
                 url(HttpRoutes.SIGN_UP)
                 contentType(ContentType.Application.Json)
-                body = SignUpRequest
+                body = signUpRequest
             }
         }
         catch(e: Exception) {
-            Log.d("tga","Error: ${e.message} jkjk")
+            Log.d("tga","Error: ${e.message}")
             SignUpResponse(e.message.toString(),"","","","",-1)
         }
     }
@@ -26,9 +26,10 @@ class OwnerServiceImplementation(
     override suspend fun ownerLogin(loginRequest: LoginRequest): LoginResponse? {
         return try {
             client.post<LoginResponse> {
-                url(HttpRoutes.LOGIN)
                 contentType(ContentType.Application.Json)
-                body = LoginRequest
+                url(HttpRoutes.LOGIN)
+                //contentType(ContentType.Application.Json)
+                body = loginRequest
             }
         }
         catch(e: Exception) {

@@ -1,5 +1,6 @@
 package com.example.finalyearproject
 
+import Security.hash
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -9,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -18,6 +20,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,6 +37,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -81,16 +86,27 @@ fun signUpScreen(navigator:DestinationsNavigator){
                 fontSize = 16.sp
             )
         }
-
-        AnimatedVisibility(visible = alertState, modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 30.dp, horizontal = 16.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(Purple700),
+        AnimatedVisibility(visible = alertState,
             enter = fadeIn(animationSpec = tween(1000)),
             exit = fadeOut(animationSpec = tween(3000))
-        ){
-            Text(status, fontSize = 24.sp, textAlign = TextAlign.Center, color = Color.White, modifier = Modifier.padding(vertical = 5.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 30.dp, horizontal = 16.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(alertColor),
+                contentAlignment = Alignment.Center
+
+                ) {
+                Text(
+                    status,
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center,
+                    color = Color.White,
+                    modifier = Modifier.padding(vertical = 5.dp)
+                )
+            }
         }
 
         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -234,6 +250,8 @@ fun signUpScreen(navigator:DestinationsNavigator){
                         .fillMaxWidth()
                         .padding(end = 20.dp),
                     placeholder = { Text(text = "Password", Modifier.padding(start = 0.dp)) },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     colors = TextFieldDefaults.textFieldColors(
                         focusedIndicatorColor = Color.Red,
                         backgroundColor = Color.Transparent,
@@ -254,25 +272,26 @@ fun signUpScreen(navigator:DestinationsNavigator){
                 .clickable {
                     val owner = SignUpRequest(
                         email.text,
-                        password.text,
+                        password.text.hash(),
                         firstName.text,
                         lastName.text,
                         number.text
                     )
                     GlobalScope.launch{
-                    var createdOwner = service.createOwner(owner)
-                    status = createdOwner!!.firstName
-                    alertColor = Purple700
-                    alertState = true
-                        /*if (service.createOwner(owner)?.id == -1L) {
-                            status = service.createOwner(owner)?.id.toString()
+                    if (service.createOwner(owner)?.id == -1L) {
+                            status = "Email already exists"
                             alertColor = Purple700
                             alertState = true
-                        } else {
-                            status = service.createOwner(owner)?.email.toString()
-                            alertColor = Teal200
-                            alertState = true
-                        }*/
+                            delay(3000)
+                            alertState = false
+                    } else {
+                        status = "Success proceed to login"
+                        alertColor = Teal200
+                        alertState = true
+                        delay(3000)
+                        alertState = false
+                    }
+
                     }
                 }
         )

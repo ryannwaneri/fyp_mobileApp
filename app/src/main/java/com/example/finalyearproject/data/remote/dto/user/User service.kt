@@ -1,5 +1,8 @@
 package com.example.finalyearproject.data.remote.dto.owner
 
+import com.example.finalyearproject.data.remote.dto.user.AddUnregUser
+import com.example.finalyearproject.data.remote.dto.user.GetRegUser
+import com.example.finalyearproject.data.remote.dto.user.GetUnregUser
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.features.*
@@ -8,16 +11,23 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import kotlin.text.Charsets
 
-interface OwnerService {
+interface UserService {
 
-    suspend fun createOwner(signUpRequest: SignUpRequest): SignUpResponse?
+    suspend fun getRegUser(deviceId : Long): MutableList<GetRegUser>
 
-    suspend fun ownerLogin(loginRequest: LoginRequest): LoginResponse?
+    suspend fun getUnregUser(deviceId : String): MutableList<GetUnregUser>
+
+    suspend fun revokeRegUser(userId : Long)
+
+    suspend fun addRegUser(user : AddUnregUser)
+
+    suspend fun getUser(userId : Long) : GetRegUser
+
 
     @kotlinx.serialization.Serializable
     companion object {
-        fun create(): OwnerService{
-            return OwnerServiceImplementation(
+        fun create(): UserService{
+            return UserServiceImplementation(
                 client = HttpClient(Android) {
                     install(Logging) {
                         level = LogLevel.ALL
