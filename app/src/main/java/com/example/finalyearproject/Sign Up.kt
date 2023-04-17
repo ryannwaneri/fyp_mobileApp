@@ -92,7 +92,6 @@ fun signUpScreen(navigator:DestinationsNavigator) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 25.dp)
                     .background(alertColor),
                 contentAlignment = Alignment.Center
 
@@ -101,7 +100,6 @@ fun signUpScreen(navigator:DestinationsNavigator) {
                     status,
                     textAlign = TextAlign.Center,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 5.dp),
                     style = Typography.caption
                 )
             }
