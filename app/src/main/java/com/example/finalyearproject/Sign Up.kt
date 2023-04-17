@@ -44,17 +44,29 @@ import kotlinx.coroutines.launch
 //future ryan i appologise for putting this one here it shuld be in a file of its own
 @Composable
 fun enterButton(text: String, modifier: Modifier){
-    Card(modifier , backgroundColor = primary){
-        Text(text, fontSize = 24.sp, textAlign = TextAlign.Center, color = Color.White, modifier = Modifier.padding(vertical = 5.dp))
+    Card(modifier , backgroundColor = lightPrimary){
+        Row(modifier = Modifier.padding(vertical = 5.dp, horizontal = 15.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text + " ",
+                textAlign = TextAlign.Center,
+                color = Color.Black,
+                style = Typography.button
+            )
+            Icon(
+                painterResource(id = R.drawable.front),
+                "go",
+                tint = Color.Black
+            )
+        }
     }
 }
 
 @Destination(start=true)
 @Composable
-fun signUpScreen(navigator:DestinationsNavigator){
+fun signUpScreen(navigator:DestinationsNavigator) {
 
     var service = OwnerService.create()
-    var status by remember{mutableStateOf("")}
+    var status by remember { mutableStateOf("") }
 
     var alertState by remember { mutableStateOf(false) }
     var alertColor by remember { mutableStateOf(primary) }
@@ -71,229 +83,283 @@ fun signUpScreen(navigator:DestinationsNavigator){
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            Text(
-                text = "Login",
-                color = Color.Red,
-                modifier = Modifier
-                    .padding(end = 16.dp, top = 16.dp)
-                    .clickable {
-                        navigator.navigate(
-                            loginScreenDestination
-                        )
-                    },
-                fontWeight = FontWeight.Medium,
-                fontSize = 16.sp
-            )
-        }
-        AnimatedVisibility(visible = alertState,
+
+        AnimatedVisibility(
+            visible = alertState,
             enter = fadeIn(animationSpec = tween(1000)),
             exit = fadeOut(animationSpec = tween(3000))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 30.dp, horizontal = 16.dp)
-                    .clip(RoundedCornerShape(8.dp))
+                    .padding(top = 25.dp)
                     .background(alertColor),
                 contentAlignment = Alignment.Center
 
-                ) {
+            ) {
                 Text(
                     status,
-                    fontSize = 24.sp,
                     textAlign = TextAlign.Center,
                     color = Color.White,
-                    modifier = Modifier.padding(vertical = 5.dp)
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    style = Typography.caption
                 )
             }
         }
 
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterStart) {
             Text(
                 text = "Sign Up",
                 color = Color.Black,
-                modifier = Modifier.padding(top = 45.dp, bottom = 40.dp),
-                fontWeight = FontWeight.Bold,
-                fontSize = 50.sp
+                modifier = Modifier.padding(top = 25.dp, bottom = 20.dp, start = 25.dp),
+                style = Typography.h1
             )
         }
 
-        Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .weight(weight = 1f, fill = true)
-        ) {
-            //firstName
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 20.dp)
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth(0.85f),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.name),
-                    contentDescription = "first name",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    tint = firtNameColourState.value
-                )
+                //firstName
+
                 TextField(
                     value = firstName,
                     onValueChange = { value -> firstName = value },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 20.dp),
-                    placeholder = { Text(text = "First Name", Modifier.padding(start = 0.dp)) },
+                        .padding(top = 20.dp),
+                    placeholder = {
+                        Text(
+                            text = "First Name",
+                            Modifier.padding(start = 0.dp),
+                            style = Typography.caption
+                        )
+                    },
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Red,
-                        backgroundColor = Color.Transparent,
-                        disabledTextColor = disabled,
-                        disabledPlaceholderColor = disabled
-                    )
+                        focusedIndicatorColor = primary,
+                        backgroundColor = disabled,
+                        disabledTextColor = disabledText,
+                        disabledPlaceholderColor = disabledText,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.name),
+                            contentDescription = "first name",
+                            tint = primary
+                        )
+                    },
+                    textStyle = Typography.h2
                 )
-            }
 
-            //LastName
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.name),
-                    contentDescription = "last name",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    tint = firtNameColourState.value
-                )
+
+                //LastName
+
                 TextField(
                     value = lastName,
                     onValueChange = { value -> lastName = value },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 20.dp),
-                    placeholder = { Text(text = "Last Name", Modifier.padding(start = 0.dp)) },
+                        .padding(top = 20.dp),
+                    placeholder = {
+                        Text(
+                            text = "Last Name",
+                            Modifier.padding(start = 0.dp),
+                            style = Typography.caption
+                        )
+                    },
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Red,
-                        backgroundColor = Color.Transparent,
-                        disabledTextColor = disabled,
-                        disabledPlaceholderColor = disabled
-                    )
+                        focusedIndicatorColor = primary,
+                        backgroundColor = disabled,
+                        disabledTextColor = disabledText,
+                        disabledPlaceholderColor = disabledText,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.name),
+                            contentDescription = "last name",
+                            tint = primary
+                        )
+                    },
+                    textStyle = Typography.h2
                 )
-            }
 
-            //email
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.email),
-                    contentDescription = "email",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    tint = firtNameColourState.value
-                )
+
+                //email
+
                 TextField(
                     value = email,
                     onValueChange = { value -> email = value },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 20.dp),
-                    placeholder = { Text(text = "Email", Modifier.padding(start = 0.dp)) },
+                        .padding(top = 20.dp),
+                    placeholder = {
+                        Text(
+                            text = "Email",
+                            Modifier.padding(start = 0.dp),
+                            style = Typography.caption
+                        )
+                    },
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Red,
-                        backgroundColor = Color.Transparent,
-                        disabledTextColor = disabled,
-                        disabledPlaceholderColor = disabled
-                    )
+                        focusedIndicatorColor = primary,
+                        backgroundColor = disabled,
+                        disabledTextColor = disabledText,
+                        disabledPlaceholderColor = disabledText,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.email),
+                            contentDescription = "email",
+                            tint = primary
+                        )
+                    },
+                    textStyle = Typography.h2
                 )
-            }
 
-            //number
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.number),
-                    contentDescription = "number",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    tint = firtNameColourState.value
-                )
+
+                //number
+
                 TextField(
                     value = number,
                     onValueChange = { value -> number = value },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 20.dp),
-                    placeholder = { Text(text = "Phone Number", Modifier.padding(start = 0.dp)) },
+                        .padding(top = 20.dp),
+                    placeholder = {
+                        Text(
+                            text = "Phone Number",
+                            Modifier.padding(start = 0.dp),
+                            style = Typography.caption
+                        )
+                    },
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Red,
-                        backgroundColor = Color.Transparent,
-                        disabledTextColor = disabled,
-                        disabledPlaceholderColor = disabled
-                    )
+                        focusedIndicatorColor = primary,
+                        backgroundColor = disabled,
+                        disabledTextColor = disabledText,
+                        disabledPlaceholderColor = disabledText,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.number),
+                            contentDescription = "number",
+                            tint = primary
+                        )
+                    },
+                    textStyle = Typography.h2
                 )
-            }
 
-            //password
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 20.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.password),
-                    contentDescription = "password",
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    tint = firtNameColourState.value
-                )
+
+                //password
+
                 TextField(
                     value = password,
                     onValueChange = { value -> password = value },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 20.dp),
-                    placeholder = { Text(text = "Password", Modifier.padding(start = 0.dp)) },
+                        .padding(top = 20.dp),
+                    placeholder = {
+                        Text(
+                            text = "Password",
+                            Modifier.padding(start = 0.dp),
+                            style = Typography.caption
+                        )
+                    },
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedIndicatorColor = Color.Red,
-                        backgroundColor = Color.Transparent,
-                        disabledTextColor = disabled,
-                        disabledPlaceholderColor = disabled
-                    )
+                        focusedIndicatorColor = primary,
+                        backgroundColor = disabled,
+                        disabledTextColor = disabledText,
+                        disabledPlaceholderColor = disabledText,
+                        unfocusedIndicatorColor = Color.Transparent
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.password),
+                            contentDescription = "password",
+                            tint = primary
+                        )
+                    },
+                    textStyle = Typography.h2
+                )
+
+            }
+        }
+
+        val effect = remember {
+            mutableStateOf(false)
+        }
+
+        LaunchedEffect(key1 = effect.value){
+            if(effect.value == true) {
+                navigator.navigate(
+                    loginScreenDestination
                 )
             }
         }
 
         //Spacer(modifier=Modifier.weight(1f))
+        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            enterButton(text = "Sign Up",
+                modifier = Modifier
+                    .padding(end = 20.dp, bottom = 20.dp, top = 20.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .clickable {
+                        val owner = SignUpRequest(
+                            email.text,
+                            password.text.hash(),
+                            firstName.text,
+                            lastName.text,
+                            number.text
+                        )
+                        GlobalScope.launch {
+                            if (service.createOwner(owner)?.id == -1L) {
+                                status = "Email already exists"
+                                alertColor = errorColor
+                                alertState = true
+                                delay(3000)
+                                alertState = false
+                            } else {
+                                status = "Success proceed to login"
+                                alertColor = Teal200
+                                alertState = true
+                                delay(3000)
+                                alertState = false
+                                effect.value = !effect.value
+                            }
 
-        enterButton(text = "Sign Up",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 20.dp, horizontal = 20.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .clickable {
-                    val owner = SignUpRequest(
-                        email.text,
-                        password.text.hash(),
-                        firstName.text,
-                        lastName.text,
-                        number.text
+                        }
+                    }
+            )
+        }
+
+        Row(
+            Modifier
+                .padding(bottom = 16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                "Already have an account? ",
+                style = Typography.subtitle1,
+                color = disabledText
+            )
+            Text(
+                "Login",
+                style = Typography.subtitle1,
+                color = primary,
+                modifier = Modifier.clickable {
+                    navigator.navigate(
+                        loginScreenDestination
                     )
-                    GlobalScope.launch{
-                    if (service.createOwner(owner)?.id == -1L) {
-                            status = "Email already exists"
-                            alertColor = Purple700
-                            alertState = true
-                            delay(3000)
-                            alertState = false
-                    } else {
-                        status = "Success proceed to login"
-                        alertColor = Teal200
-                        alertState = true
-                        delay(3000)
-                        alertState = false
-                    }
-
-                    }
                 }
-        )
+            )
+        }
     }
 }
